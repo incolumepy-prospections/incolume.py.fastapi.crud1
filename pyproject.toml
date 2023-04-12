@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "incolume-py-fastapi-crud1"
+version = "0.1.0"
+description = ""
+authors = ["britodfbr <britodfbr@gmail.com>"]
+readme = "README.md"
+packages = [{include = "incolume"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
