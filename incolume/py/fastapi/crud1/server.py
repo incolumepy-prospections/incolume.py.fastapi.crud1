@@ -38,9 +38,9 @@ def get_users_path(username: str):
 
 
 @app.get('/users')
-def get_users_query(limit: int = 20):
+def get_users_query(offset: int = 0, limit: int = 20):
     user_list = list(user_db.values())
-    return user_list[:limit]
+    return user_list[offset:limit]
 
 
 @app.post('/users')
