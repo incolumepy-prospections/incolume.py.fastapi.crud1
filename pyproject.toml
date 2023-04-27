@@ -3,13 +3,85 @@ name = "incolume-py-fastapi-crud1"
 version = "0.1.0"
 description = ""
 authors = ["britodfbr <britodfbr@gmail.com>"]
+license = "LICENSE"
 readme = "README.md"
 packages = [{include = "incolume"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.95.0"}
+fastapi-pagination = "^0.12.1"
+uvicorn = "^0.21.1"
+sqlalchemy = "^2.0.9"
+psycopg2-binary = "^2.9.6"
+dynaconf = "^3.1.12"
+passlib = "^1.7.4"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.6"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.0"
+pytest-cov = "^4.0.0"
+taskipy = "^1.10.4"
+alembic = "^1.10.3"
+
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.4.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+#log_format = '%(asctime)s %(levelname)s %(message)s'
+log_format = '%(asctime)s; %(levelname)-8s; %(name)s; %(module)s; %(funcName)s; %(message)s'
+log_date_format ='%FT%T%N%z'
+addopts = "--doctest-modules --cov=incolume -sx --cov-report term-missing --cov-report html:coverage_report/html --cov-report xml:coverage_report/cov.xml"
+testpaths = [
+  "tests",
+]
+markers = [
+  "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+  "webtest: marks tests as webtest (deselect with '-m \"not webtest\"')",
+  "fast: marks tests as fast (deselect with '-m \"not fast\"')",
+]
+
+[tool.coverage.html]
+directory = "coverage_report/html"
+
+[tool.coverage.xml]
+
+[tool.coverage.run]
+omit = [
+  # omit anything in a .local directory anywhere
+  "*/.local/*",
+  # omit everything in /usr
+  "/usr/*",
+  # omit this single file
+  "configure/truncus.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "logger.debug",
+  "logger.info",
+  "logger.warning",
+  "logger.error",
+  "ImportError",
+  "ModuleNotFoundError",
+  "__package__ =",
+  "def run",
+  "def terminal.",
+  "__author__",
+  "class IElements"
+]
+
+[tool.taskipy.tasks]
+prerelease={cmd='v=$(poetry version prerelease) && poetry run pytest && git ci -m "$v" pyproject.toml coverage_report $(find incolume* -name version.txt)', help='poetry version prerelease'}
+patch={cmd='v=$(poetry version patch) && poetry run pytest && git ci -m "$v" pyproject.toml coverage_report $(find incolume* -name version.txt)', help='poetry version patch'}
+preminor={cmd='v=$(poetry version preminor) && poetry run pytest && git ci -m "$v" pyproject.toml coverage_report $(find incolume* -name version.txt)', help='poetry version preminor'}
+premajor={cmd='v=$(poetry version premajor) && poetry run pytest && git ci -m "$v" pyproject.toml coverage_report $(find incolume* -name version.txt)', help='poetry version premajor'}
