@@ -26,7 +26,7 @@ class TestAPI:
                 {"username": "ava", "date_joined": "2023-04-27T19:49:02.843Z", "state": "Paraíba", "age": 10}, 
                 200, 
                 {'message': 'Successfully created user: ava'},
-                marks='',
+                # marks=pytest.mark.skip,
             ),
             pytest.param(
                 'put', 
@@ -34,7 +34,7 @@ class TestAPI:
                 {'username': 'ava', 'date_joined': '2023-04-27T19:49:02.843Z', 'state': 'Goiás', 'age': 18}, 
                 200, 
                 {'message': 'Successfully updated user ava'},
-                marks='',   # pytest.mark.skip,
+                # marks=pytest.mark.skip,
             ),
             pytest.param(
                 'patch', 
@@ -42,7 +42,7 @@ class TestAPI:
                 {'username': 'ava', 'date_joined': '2023-04-27T19:49:02.843000Z'}, 
                 200, 
                 {'message': 'Successfully updated user ava'},
-                marks='',
+                # marks=pytest.mark.skip,
             ),
             pytest.param(
                 'delete', 
@@ -54,7 +54,7 @@ class TestAPI:
             ),
         ),
     )
-    def test_get_endpoint(self, method, endpoint, json_data, status, content, client: TestClient) -> None:
+    def test_endpoint(self, method, endpoint, json_data, status, content, client: TestClient) -> None:
         match method:
             case 'get':
                 response = client.get(endpoint)
