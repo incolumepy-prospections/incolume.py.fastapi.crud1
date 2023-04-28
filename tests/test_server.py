@@ -1,4 +1,5 @@
 import pytest 
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 import json
 
@@ -52,6 +53,22 @@ class TestAPI:
                 {"message": "Successfully deleted user ava"},
                 # marks=pytest.mark.skip,
             ),
+            pytest.param(
+                'post', 
+                '/users', 
+                {'username': 'ana', 'date_joined': '2023-04-27T19:49:02.843000Z'}, 
+                409, 
+                {"detail":"Cannot create user. Username ana already exists"}, 
+                # marks=[pytest.mark.skip]
+            ),
+            pytest.param(
+                'get', 
+                '/users/ava', 
+                {}, 
+                404, 
+                {'detail': 'Username ava not found'}, 
+                # marks=[pytest.mark.skip]
+                ),
         ),
     )
     def test_endpoint(self, method, endpoint, json_data, status, content, client: TestClient) -> None:
@@ -67,18 +84,6 @@ class TestAPI:
             case 'delete':
                 response = client.delete(endpoint)
 
-        assert response.status_code == status, response.text
-        data = response.json()
-        assert data == content
-
-    @pytest.mark.skip
-    def test_endpoint(self, client: TestClient):
-        endpoint = '/users'
-        json_data = {"username": "ava", "date_joined": "2023-04-27T19:49:02.843Z", "state": "Paraíba", "age": 10}
-        status = 200
-        content = {'message': 'Successfully updated user ava'}
-        assert isinstance(json_data, dict)
-        response = client.put(endpoint, json=json_data)
         assert response.status_code == status, response.text
         data = response.json()
         assert data == content
